@@ -1,9 +1,8 @@
 <!-- Test de base de données -->
 <?php
-/* require_once("./config/autoload.php");
-use ch\comem\DbManagerCRUD;
-use ch\comem\Utilisateur;
 
+
+/*
 $db = new DbManagerCRUD();
 $db->creeTableUtilisateur();
 $utilisateur = new Utilisateur("Daniel", "Vale", "vale.daniel@outlook.com", "079 123 45 67", "1234");
@@ -36,7 +35,7 @@ $db->ajouteUtilisateur($utilisateur); */
 
     <div class="container mt-5">
         <h2 class="text-center">Créer un compte</h2>
-        <form action="register_process.php" method="post" class="mt-4">
+        <form action="" method="post" class="mt-4">
             <div class="form-group">
                 <label for="nom">Nom</label>
                 <input type="text" class="form-control" id="nom" name="nom" required>
@@ -64,8 +63,32 @@ $db->ajouteUtilisateur($utilisateur); */
         </p>
     </div>
 
+    <?php
+    require_once("./config/autoload.php");
+
+    use ch\comem\DbManagerCRUD;
+    use ch\comem\Utilisateur;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nom = filter_input(INPUT_POST, 'nom', FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^[A-ZÇÉÈÊËÀÂÎÏÔÙÛ]{1}([a-zçéèêëàâîïôùû]+|([a-zçéèêëàâîïôùû]+-[A-ZÇÉÈÊËÀÂÎÏÔÙÛ]{1}[a-zçéèêëàâîïôùû]+)){1,19}$/"]]);
+        $prenom = filter_input(INPUT_POST, 'prenom', FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^[A-ZÇÉÈÊËÀÂÎÏÔÙÛ]{1}([a-zçéèêëàâîïôùû]+|([a-zçéèêëàâîïôùû]+-[A-ZÇÉÈÊËÀÂÎÏÔÙÛ]{1}[a-zçéèêëàâîïôùû]+)){1,19}$/"]]);
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $noTel = filter_input(INPUT_POST, 'noTel', FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^(\+41|0041|0){1}([1-9]{1}[0-9]{1})[0-9]{3}[0-9]{2}[0-9]{2}$/"]]);
+        $password = filter_input(INPUT_POST, 'password', FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/"]]);
+        $password = password_hash($password, PASSWORD_DEFAULT);
+
+        $utilisateur = new Utilisateur($nom, $prenom, $email, $noTel, $password);
+        $dbManager = new DbManagerCRUD();
+        $dbManager->creeTableUtilisateur();
+        $dbManager->ajouteUtilisateur($utilisateur);
+
+        echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
+    }
+    ?>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
