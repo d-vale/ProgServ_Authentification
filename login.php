@@ -41,6 +41,9 @@
             </div>
             <button type="submit" class="btn btn-primary">Se connecter</button>
         </form>
+        <div class="text-center mt-3">
+            <p>Pas de compte ? <a href="register.php">Créer un compte</a></p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
