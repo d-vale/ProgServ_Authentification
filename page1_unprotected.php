@@ -27,7 +27,7 @@
         <h1>Bienvenue sur mon site</h1>
         <div class="mt-4">
             <a href="register.php" class="btn btn-primary">Créer compte</a>
-            <a href="page2_unprotected.php" class="btn btn-secondary">Login</a>
+            <a href="login.php" class="btn btn-secondary">Login</a>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
