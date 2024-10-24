@@ -27,7 +27,7 @@ $db->ajouteUtilisateur($utilisateur); */
                 <li class="nav-item">
                     <a class="nav-link" href="page1_unprotected.php">Page 1</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="page2_protected.php">Page 2</a>
                 </li>
             </ul>

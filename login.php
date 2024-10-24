@@ -18,12 +18,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="page2_protected.php">Page 2</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="register.php">S'inscrire</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="login.php">Connexion</a>
-                </li>
             </ul>
         </div>
     </nav>
