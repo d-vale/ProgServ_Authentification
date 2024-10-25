@@ -28,7 +28,7 @@ class DbManagerCRUD implements I_ApiCRUD
                 prenom VARCHAR(120) NOT NULL,
                 email VARCHAR(120) NOT NULL UNIQUE,
                 noTel VARCHAR(20) NOT NULL UNIQUE,
-                password VARCHAR(120) NOT NULL
+                password VARCHAR(900) NOT NULL
             );
 COMMANDE_SQL;
 

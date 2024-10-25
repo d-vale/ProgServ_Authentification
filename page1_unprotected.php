@@ -23,13 +23,26 @@
             </ul>
         </div>
     </nav>
-    <div class="container text-center mt-5">
-        <h1>Bienvenue sur mon site</h1>
-        <div class="mt-4">
-            <a href="register.php" class="btn btn-primary">Créer compte</a>
-            <a href="login.php" class="btn btn-secondary">Login</a>
+    <?php
+    session_start();
+    if (isset($_SESSION['email'])) {
+        echo "<div class='container mt-5'>";
+        echo "<h2 class='text-center'>Bienvenue " . $_SESSION['prenom'] . "</h2>";
+        echo "<p class='text-center mt-3'><a href='logout.php' class='btn btn-secondary'>Se déconnecter</a></p>";
+        echo "</div>";
+    } else {
+        echo ' 
+        <div class="container text-center mt-5">
+            <h1>Bienvenue sur mon site</h1>
+            <div class="mt-4">
+                <a href="register.php" class="btn btn-primary">Créer compte</a>
+                <a href="login.php" class="btn btn-secondary">Login</a>
+            </div>
         </div>
-    </div>
+        ';
+    }
+    ?>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

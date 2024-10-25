@@ -49,30 +49,33 @@
 <?php 
 require_once("./config/autoload.php");
 
-if(isset($_POST['email']) && isset($_POST['password'])) {
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $password = $_POST['password'];
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+    if ($email && $password) {
+        $db = new PDO("sqlite:db/dbpsw.sqlite", "", "");
+        $sql = "SELECT * FROM utilisateurs WHERE email = :email";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':email', $email);
 
-$db = new PDO("sqlite:db/dbpsw.sqlite", "", "");
-$sql = "SELECT * FROM utilisateurs WHERE email = :email AND password = :password";
-$stmt = $db->prepare($sql);
-$stmt->bindParam(':email', $email);
-$stmt->bindParam(':password', $password);
-
-if($stmt->execute()) {
-    $result = $stmt->fetchAll();
-    if(count($result) > 0) {
-        session_start();
-        $_SESSION['email'] = $email;
-        header("Location: page2_protected.php");
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result && password_verify($password, $result['password'])) {
+                session_start();
+                $_SESSION['email'] = $email;
+                $_SESSION['prenom'] = $result['prenom'];
+                $_SESSION['nom'] = $result['nom'];
+                header("Location: page1_unprotected.php");
+            } else {
+                echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
+            }
+        } else {
+            echo '<p style="color: red" class="mt-3 text-center">Erreur de connexion</p>';
+        }
     } else {
-        echo "Email ou mot de passe incorrect";
+        echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
     }
-} else {
-    echo "Erreur de connexion";
-}
-
 }
 
 ?>
