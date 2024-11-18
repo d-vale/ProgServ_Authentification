@@ -33,7 +33,7 @@
                 <label for="password">Mot de passe</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
+            <button type="submit" name="submit" class="btn btn-primary">Se connecter</button>
         </form>
         <div class="text-center mt-3">
             <p>Pas de compte ? <a href="register.php">Créer un compte</a></p>
@@ -48,34 +48,9 @@
 
 <?php 
 require_once("./config/autoload.php");
-
-if (isset($_POST['email']) && isset($_POST['password'])) {
-    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $password = $_POST['password'];
-
-    if ($email && $password) {
-        $db = new PDO("sqlite:db/dbpsw.sqlite", "", "");
-        $sql = "SELECT * FROM utilisateurs WHERE email = :email";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':email', $email);
-
-        if ($stmt->execute()) {
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($result && password_verify($password, $result['password'])) {
-                session_start();
-                $_SESSION['email'] = $email;
-                $_SESSION['prenom'] = $result['prenom'];
-                $_SESSION['nom'] = $result['nom'];
-                header("Location: page1_unprotected.php");
-            } else {
-                echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
-            }
-        } else {
-            echo '<p style="color: red" class="mt-3 text-center">Erreur de connexion</p>';
-        }
-    } else {
-        echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
-    }
+use ch\comem\DbManagerCRUD;
+$dbManager = new DbManagerCRUD();
+if(isset($_POST['submit'])){
+    $dbManager->loginUtilisateur();
 }
-
 ?>

@@ -25,19 +25,14 @@
     </nav>
 
     <?php
-    session_start();
-    if (!isset($_SESSION['email'])) {
-        echo "<div class='alert alert-danger' role='alert'> Tu n'as pas accés au contenu de cette page</div>";
-        echo '<div class="mt-4 text-center">
-        <a href="register.php" class="btn btn-primary">Créer compte</a>
-        <a href="login.php" class="btn btn-secondary">Login</a>
-        </div>';
-    } else {
-        echo "<div class='container mt-5'>";
-        echo "<h2 class='text-center'>Bienvenue " . $_SESSION['prenom'] . "</h2>";
-        echo "<p class='text-center mt-3'>Tu as accès au contenu de cette page !</p>";
-        echo "</div>";
-    }
+    include 'ch/comem/Protected.php'; //Vérification d'accès
+
+    //Si la vérification est bonne le contenu s'affiche
+    echo "<div class='container mt-5'>";
+    echo "<h2 class='text-center'>Bienvenue " . $_SESSION['prenom'] . "</h2>";
+    echo "<p class='text-center mt-3'>Tu as accès au contenu de cette page !</p>";
+    echo "</div>";
+
     ?>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

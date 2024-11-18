@@ -19,6 +19,7 @@ class DbManagerCRUD implements I_ApiCRUD
         }
     }
 
+    //Fonction pour créer la table utilisateur
     public function creeTableUtilisateur(): bool
     {
         $sql = <<<COMMANDE_SQL
@@ -42,6 +43,7 @@ COMMANDE_SQL;
         return $ok;
     }
 
+    //Fonction pour ajouter un utilisateur
     public function ajouteUtilisateur(Utilisateur $utilisateur): int
     {
         $datas = [
@@ -54,9 +56,11 @@ COMMANDE_SQL;
         $sql = "INSERT INTO utilisateurs (nom, prenom, email, noTel, password) VALUES "
             . "(:nom, :prenom, :email, :noTel, :password);";
         $this->db->prepare($sql)->execute($datas);
+        echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
         return $this->db->lastInsertId();
     }
 
+    //Fonction pour récupérer tous les utilisateurs
     public function rendUtilisateur(string $nom): array
     {
         $sql = "SELECT * From utilisateurs WHERE nom = :nom;";
@@ -68,8 +72,8 @@ COMMANDE_SQL;
         if ($donnees) {
             foreach ($donnees as $donneesUtilisateur) {
                 $p = new Utilisateur(
-                    $donneesUtilisateur["prenom"],
                     $donneesUtilisateur["nom"],
+                    $donneesUtilisateur["prenom"],
                     $donneesUtilisateur["email"],
                     $donneesUtilisateur["noTel"],
                     $donneesUtilisateur["id"],
@@ -81,6 +85,7 @@ COMMANDE_SQL;
         return $tabUtilisateurs;
     }
 
+    //Fonction pour supprimer un utilisateur
     public function supprimeUtilisateur(int $id): bool
     {
         $sql = "DELETE FROM utilisateurs WHERE id = :id";
@@ -88,5 +93,35 @@ COMMANDE_SQL;
         $stmt->bindParam('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->rowCount() > 0;
+    }
+
+    //Fonction pour vérifier le login d'un utilisateur
+    public function loginUtilisateur(): void{
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $password = $_POST['password'];
+
+        if ($email && $password) {
+            $db = new \PDO("sqlite:db/dbpsw.sqlite", "", "");
+            $sql = "SELECT * FROM utilisateurs WHERE email = :email";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':email', $email);
+
+            if ($stmt->execute()) {
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($result && password_verify($password, $result['password'])) {
+                    session_start();
+                    $_SESSION['email'] = $email;
+                    $_SESSION['prenom'] = $result['prenom'];
+                    $_SESSION['nom'] = $result['nom'];
+                    header("Location: page1_unprotected.php");
+                } else {
+                    echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
+                }
+            } else {
+                echo '<p style="color: red" class="mt-3 text-center">Erreur de connexion</p>';
+            }
+        } else {
+            echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
+        }
     }
 }

@@ -78,11 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $password = password_hash($password, PASSWORD_DEFAULT);
 
-    $utilisateur = new Utilisateur($nom, $prenom, $email, $noTel, $password);
+    $utilisateur = new Utilisateur($prenom, $nom, $email, $noTel, $password);
     $dbManager = new DbManagerCRUD();
     $dbManager->creeTableUtilisateur();
     $dbManager->ajouteUtilisateur($utilisateur);
-
-    echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
 }
 ?>
